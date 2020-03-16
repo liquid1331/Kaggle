@@ -1,0 +1,57 @@
+import pandas as pd
+import numpy as np
+# df1=pd.read_csv("kaggle2.csv")
+# df1.head()
+df=pd.read_csv("kaggle1.csv")
+df.head()
+t1=df.dropna(subset=["Age"],axis=0)
+t=df1.dropna(subset=["Age"],axis=0)
+# print(t1[0:5])
+t2=int(t1["Age"].mean())
+t1=int(t["Age"].mean())
+# print("t2",t2,t1)
+df.fillna(29,inplace=True)
+df1.fillna(30,inplace=True)
+
+X=df[["Pclass","Sex","Age"]]
+y=df["Survived"]
+X_train=np.asarray(X)
+y_train=np.asarray(y)
+# for i in range(X_train.shape[0]):
+#     if X_train[i,2].isnull():
+#         X_train[i,2]=t2
+# print(df.head(10))
+# print(X[0:50])
+# print(y[0:5])
+for i in range(X_train.shape[0]):
+    if X_train[i,1]=="male":
+        X_train[i,1]=1
+    else:
+        X_train[i,1]=0
+# print(X[0:50])
+X=df1[["Pclass","Sex","Age"]]
+X_test=np.asarray(X)
+for i in range(X_test.shape[0]):
+    if X_test[i,1]=="male":
+        X_test[i,1]=1
+    else:
+        X_test[i,1]=0
+# for i in range(X_test.shape[0]):
+#     if X_test[i,2].isnan():
+#         X_test[i,2]=t1
+
+# # from sklearn.model_selection import train_test_split
+# # X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.3)
+from sklearn import svm
+clf=svm.SVC(kernel="linear")
+clf.fit(X_train,y_train)
+
+yhat = clf.predict(X_test)
+yhat[0:5]
+df3=pd.DataFrame()
+df3["PassengerId"]=df1["PassengerId"]
+df3["Survived"]=yhat
+df3.head()
+df3.to_csv("kaggleans1.csv",index=False)
+# from sklearn.metrics import accuracy_score
+# print("Accuracy:%.2f"%accuracy_score(y_test,yhat))
